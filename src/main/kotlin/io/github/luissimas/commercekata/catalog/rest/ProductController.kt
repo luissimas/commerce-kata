@@ -1,6 +1,7 @@
 package io.github.luissimas.commercekata.catalog.rest
 
-import io.github.luissimas.commercekata.catalog.Product
+import io.github.luissimas.commercekata.catalog.domain.Product
+import jakarta.validation.Valid
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate
@@ -25,6 +26,6 @@ class ProductController(
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun createProduct(
-        @RequestBody request: CreateProductRequestDTO,
-    ): Product = repository.insert(request.toDomain())
+        @RequestBody @Valid request: CreateProductRequestDTO,
+    ): ProductDTO = repository.insert(request.toDomain()).let(ProductDTO::fromDomain)
 }

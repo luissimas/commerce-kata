@@ -3,6 +3,7 @@ package io.github.luissimas.commercekata.catalog
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.luissimas.commercekata.ApiIntegrationTest
 import io.github.luissimas.commercekata.catalog.rest.CreateProductRequestDTO
+import io.github.luissimas.commercekata.catalog.rest.MoneyDTO
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -31,7 +32,7 @@ class ProductControllerIntegrationTest {
             CreateProductRequestDTO(
                 name = "Test Product",
                 description = "A test product",
-                price = Money(BigDecimal("19.99"), Currency.BRL),
+                price = MoneyDTO(BigDecimal("19.99"), "BRL"),
             )
         mockMvc
             .perform(
@@ -64,7 +65,7 @@ class ProductControllerIntegrationTest {
                 CreateProductRequestDTO(
                     name = "Product $index",
                     description = "Description $index",
-                    price = Money(BigDecimal("${10 + index}.99"), Currency.BRL),
+                    price = MoneyDTO(BigDecimal("${10 + index}.99"), "BRL"),
                 )
             mockMvc
                 .perform(

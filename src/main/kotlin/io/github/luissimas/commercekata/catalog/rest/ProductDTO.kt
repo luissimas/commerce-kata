@@ -1,7 +1,7 @@
 package io.github.luissimas.commercekata.catalog.rest
 
-import io.github.luissimas.commercekata.catalog.Money
-import io.github.luissimas.commercekata.catalog.Product
+import io.github.luissimas.commercekata.catalog.domain.Money
+import io.github.luissimas.commercekata.catalog.domain.Product
 import java.util.UUID
 
 data class ProductDTO(
