@@ -1,8 +1,8 @@
 package io.github.luissimas.commercekata.catalog.seed
 
-import io.github.luissimas.commercekata.catalog.Currency
-import io.github.luissimas.commercekata.catalog.Money
-import io.github.luissimas.commercekata.catalog.Product
+import io.github.luissimas.commercekata.catalog.domain.Currency
+import io.github.luissimas.commercekata.catalog.domain.Money
+import io.github.luissimas.commercekata.catalog.domain.Product
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Profile
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate
