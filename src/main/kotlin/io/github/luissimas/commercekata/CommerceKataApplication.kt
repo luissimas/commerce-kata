@@ -8,6 +8,7 @@ import org.springframework.modulith.Modulithic
 @SpringBootApplication
 class CommerceKataApplication
 
+@Suppress("SpreadOperator")
 fun main(args: Array<String>) {
     runApplication<CommerceKataApplication>(*args)
 }
