@@ -1,0 +1,27 @@
+###
+# Product Catalog API
+#
+# A collection of requests for the commerce-kata product catalog.
+# Before running, ensure the TestApplication is running.
+###
+
+# @name listProducts
+# GET a paginated list of all products.
+GET http://localhost:8080/api/v1/products?page=0&size=10&sort=name,asc
+Accept: application/json
+
+###
+
+# @name createProduct
+# POST a new product to the catalog.
+POST http://localhost:8080/api/v1/products
+Content-Type: application/json
+
+{
+  "name": "The Ultimate Widget",
+  "description": "A high-quality widget that will solve all your problems. Made from the finest materials.",
+  "price": {
+    "amount": 29.99,
+    "currency": "BRL"
+  }
+}

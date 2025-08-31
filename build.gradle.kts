@@ -50,6 +50,7 @@ dependencies {
     testImplementation("org.springframework.modulith:spring-modulith-starter-test")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
+    testImplementation("org.springframework.boot:spring-boot-starter-web")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
