@@ -103,4 +103,164 @@ class ProductControllerIntegrationTest {
             .andExpect(jsonPath("$.totalElements").value(15))
             .andExpect(jsonPath("$.numberOfElements").value(0))
     }
+
+    @Test
+    fun `should return validation error for blank product name`() {
+        val invalidRequest =
+            CreateProductRequestDTO(
+                name = "",
+                description = "Valid description",
+                price = MoneyDTO(BigDecimal("19.99"), "BRL"),
+            )
+
+        mockMvc
+            .perform(
+                post("/api/v1/products")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(invalidRequest)),
+            ).andExpect(status().isBadRequest)
+            .andExpect(jsonPath("$.type").value("urn:error:validation-failed"))
+            .andExpect(jsonPath("$.title").value("Validation Failed"))
+            .andExpect(jsonPath("$.detail").value("One or more fields have an invalid value."))
+            .andExpect(jsonPath("$.invalid_params").isArray)
+            .andExpect(jsonPath("$.invalid_params[0].field").value("name"))
+            .andExpect(jsonPath("$.invalid_params[0].message").exists())
+    }
+
+    @Test
+    fun `should return validation error for oversized product name`() {
+        val longName = "a".repeat(301)
+        val invalidRequest =
+            CreateProductRequestDTO(
+                name = longName,
+                description = "Valid description",
+                price = MoneyDTO(BigDecimal("19.99"), "BRL"),
+            )
+
+        mockMvc
+            .perform(
+                post("/api/v1/products")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(invalidRequest)),
+            ).andExpect(status().isBadRequest)
+            .andExpect(jsonPath("$.type").value("urn:error:validation-failed"))
+            .andExpect(jsonPath("$.title").value("Validation Failed"))
+            .andExpect(jsonPath("$.invalid_params[0].field").value("name"))
+    }
+
+    @Test
+    fun `should return validation error for negative price`() {
+        val invalidRequest =
+            CreateProductRequestDTO(
+                name = "Valid Name",
+                description = "Valid description",
+                price = MoneyDTO(BigDecimal("-10.00"), "BRL"),
+            )
+
+        mockMvc
+            .perform(
+                post("/api/v1/products")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(invalidRequest)),
+            ).andExpect(status().isBadRequest)
+            .andExpect(jsonPath("$.type").value("urn:error:validation-failed"))
+            .andExpect(jsonPath("$.title").value("Validation Failed"))
+            .andExpect(jsonPath("$.invalid_params[0].field").value("price.amount"))
+            .andExpect(jsonPath("$.invalid_params[0].message").value("Price must be greater than 0."))
+    }
+
+    @Test
+    fun `should return validation error for multiple invalid fields`() {
+        val invalidRequest =
+            CreateProductRequestDTO(
+                name = "",
+                description = "",
+                price = MoneyDTO(BigDecimal("0.00"), "BRL"),
+            )
+
+        mockMvc
+            .perform(
+                post("/api/v1/products")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(invalidRequest)),
+            ).andExpect(status().isBadRequest)
+            .andExpect(jsonPath("$.type").value("urn:error:validation-failed"))
+            .andExpect(jsonPath("$.invalid_params").isArray)
+            .andExpect(jsonPath("$.invalid_params.length()").value(3))
+    }
+
+    @Test
+    fun `should return missing field error when description is omitted`() {
+        val jsonWithoutDescription =
+            """
+            {
+                "name": "Valid Product",
+                "price": {
+                    "amount": 19.99,
+                    "currency": "BRL"
+                }
+            }
+            """.trimIndent()
+
+        mockMvc
+            .perform(
+                post("/api/v1/products")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(jsonWithoutDescription),
+            ).andExpect(status().isBadRequest)
+            .andExpect(jsonPath("$.type").value("urn:error:missing-required-field"))
+            .andExpect(jsonPath("$.title").value("Missing required field"))
+            .andExpect(jsonPath("$.detail").value("Required field 'description' is missing or null."))
+            .andExpect(jsonPath("$.missing_field").value("description"))
+    }
+
+    @Test
+    fun `should return invalid format error when price amount is not a number`() {
+        val jsonWithInvalidPrice =
+            """
+            {
+                "name": "Valid Product",
+                "description": "Valid description",
+                "price": {
+                    "amount": "not-a-number",
+                    "currency": "BRL"
+                }
+            }
+            """.trimIndent()
+
+        mockMvc
+            .perform(
+                post("/api/v1/products")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(jsonWithInvalidPrice),
+            ).andExpect(status().isBadRequest)
+            .andExpect(jsonPath("$.type").value("urn:error:invalid-field-format"))
+            .andExpect(jsonPath("$.title").value("Invalid field format"))
+            .andExpect(jsonPath("$.detail").value("Field 'price.amount' has an invalid format or value."))
+            .andExpect(jsonPath("$.provided_value").value("not-a-number"))
+    }
+
+    @Test
+    fun `should return error for malformed JSON`() {
+        val malformedJson =
+            """
+            {
+                "name": "Test Product",
+                "description": "Test description"
+                "price": {
+                    "amount": 19.99
+                }
+            }
+            """.trimIndent()
+
+        mockMvc
+            .perform(
+                post("/api/v1/products")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(malformedJson),
+            ).andExpect(status().isBadRequest)
+            .andExpect(jsonPath("$.type").value("urn:error:invalid-request-body"))
+            .andExpect(jsonPath("$.title").value("Invalid Request Body"))
+            .andExpect(jsonPath("$.detail").value("The request body is malformed or cannot be processed."))
+    }
 }
