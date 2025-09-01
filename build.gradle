@@ -1,8 +1,10 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.kotlin.spring)
-    alias(libs.plugins.spring.boot)
-    alias(libs.plugins.spring.dependency.management)
+    alias libs.plugins.kotlin.jvm
+    alias libs.plugins.kotlin.spring
+    alias libs.plugins.spring.boot
+    alias libs.plugins.spring.dependency.management
+    alias libs.plugins.detekt
+    alias libs.plugins.ktlint
 }
 
 group = "io.github.luissimas"
@@ -23,6 +25,11 @@ configurations {
 
 repositories {
     mavenCentral()
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    config.setFrom("$projectDir/config/detekt/detekt.yaml")
 }
 
 dependencies {
@@ -75,4 +82,12 @@ compileTestKotlin {
 
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
+}
+
+tasks.named('compileKotlin') {
+    dependsOn 'ktlintCheck', 'detekt'
+}
+
+tasks.named('compileTestKotlin') {
+    dependsOn 'ktlintCheck', 'detekt'
 }
