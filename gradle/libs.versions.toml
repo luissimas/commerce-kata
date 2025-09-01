@@ -1,0 +1,83 @@
+[versions]
+kotlin = "1.9.25"
+spring-boot = "3.5.5"
+spring-dependency-management = "1.1.7"
+spring-modulith = "1.4.1"
+springdoc-openapi = "2.8.11"
+
+[libraries]
+# Spring Boot starters
+spring-boot-starter-actuator = { group = "org.springframework.boot", name = "spring-boot-starter-actuator" }
+spring-boot-starter-data-jdbc = { group = "org.springframework.boot", name = "spring-boot-starter-data-jdbc" }
+spring-boot-starter-web = { group = "org.springframework.boot", name = "spring-boot-starter-web" }
+spring-boot-starter-validation = { group = "org.springframework.boot", name = "spring-boot-starter-validation" }
+spring-boot-devtools = { group = "org.springframework.boot", name = "spring-boot-devtools" }
+spring-boot-configuration-processor = { group = "org.springframework.boot", name = "spring-boot-configuration-processor" }
+spring-boot-docker-compose = { group = "org.springframework.boot", name = "spring-boot-docker-compose" }
+
+# Spring Modulith - BOM and libraries
+spring-modulith-bom = { group = "org.springframework.modulith", name = "spring-modulith-bom", version.ref = "spring-modulith" }
+spring-modulith-starter-core = { group = "org.springframework.modulith", name = "spring-modulith-starter-core" }
+spring-modulith-starter-jdbc = { group = "org.springframework.modulith", name = "spring-modulith-starter-jdbc" }
+spring-modulith-actuator = { group = "org.springframework.modulith", name = "spring-modulith-actuator" }
+spring-modulith-observability = { group = "org.springframework.modulith", name = "spring-modulith-observability" }
+spring-modulith-starter-test = { group = "org.springframework.modulith", name = "spring-modulith-starter-test" }
+
+# Third-party libraries
+jackson-module-kotlin = { group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin" }
+micrometer-tracing-bridge-brave = { group = "io.micrometer", name = "micrometer-tracing-bridge-brave" }
+micrometer-registry-prometheus = { group = "io.micrometer", name = "micrometer-registry-prometheus" }
+springdoc-openapi-starter-webmvc-ui = { group = "org.springdoc", name = "springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc-openapi" }
+flyway-core = { group = "org.flywaydb", name = "flyway-core" }
+flyway-database-postgresql = { group = "org.flywaydb", name = "flyway-database-postgresql" }
+kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect" }
+postgresql = { group = "org.postgresql", name = "postgresql" }
+
+# Test libraries
+spring-boot-starter-test = { group = "org.springframework.boot", name = "spring-boot-starter-test" }
+spring-boot-testcontainers = { group = "org.springframework.boot", name = "spring-boot-testcontainers" }
+kotlin-test-junit5 = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit5" }
+testcontainers-junit-jupiter = { group = "org.testcontainers", name = "junit-jupiter" }
+testcontainers-postgresql = { group = "org.testcontainers", name = "postgresql" }
+junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher" }
+
+[bundles]
+spring-boot-starters = [
+    "spring-boot-starter-actuator",
+    "spring-boot-starter-data-jdbc",
+    "spring-boot-starter-web",
+    "spring-boot-starter-validation"
+]
+
+spring-modulith-runtime = [
+    "spring-modulith-starter-core",
+    "spring-modulith-starter-jdbc"
+]
+
+observability = [
+    "micrometer-tracing-bridge-brave",
+    "micrometer-registry-prometheus",
+    "spring-modulith-actuator",
+    "spring-modulith-observability"
+]
+
+flyway = [
+    "flyway-core",
+    "flyway-database-postgresql"
+]
+
+testing = [
+    "testcontainers-junit-jupiter",
+    "testcontainers-postgresql",
+    "spring-boot-starter-test",
+    "spring-boot-testcontainers",
+    "kotlin-test-junit5",
+    "spring-modulith-starter-test",
+    "junit-platform-launcher"
+]
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-management" }

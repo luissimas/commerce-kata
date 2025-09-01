@@ -1,0 +1,78 @@
+plugins {
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.spring)
+    alias(libs.plugins.spring.boot)
+    alias(libs.plugins.spring.dependency.management)
+}
+
+group = "io.github.luissimas"
+version = "0.0.1-SNAPSHOT"
+description = "commerce-kata"
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom configurations.annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Spring Boot starters
+    implementation libs.bundles.spring.boot.starters
+
+    // Spring Modulith
+    implementation libs.bundles.spring.modulith.runtime
+
+    // Core dependencies
+    implementation libs.jackson.module.kotlin
+    implementation libs.kotlin.reflect
+    implementation libs.springdoc.openapi.starter.webmvc.ui
+
+    // Database
+    implementation libs.bundles.flyway
+    runtimeOnly libs.postgresql
+
+    // Observability
+    implementation libs.bundles.observability
+
+    // Development
+    developmentOnly libs.spring.boot.devtools
+    runtimeOnly libs.spring.boot.docker.compose
+
+    // Configuration
+    annotationProcessor libs.spring.boot.configuration.processor
+
+    // Test dependencies
+    testImplementation libs.bundles.testing
+}
+
+dependencyManagement {
+    imports {
+        mavenBom libs.spring.modulith.bom.get().toString()
+    }
+}
+
+compileKotlin {
+    kotlinOptions {
+        freeCompilerArgs += '-Xjsr305=strict'
+    }
+}
+
+compileTestKotlin {
+    kotlinOptions {
+        freeCompilerArgs += '-Xjsr305=strict'
+    }
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}
