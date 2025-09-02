@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  actions: read
+  checks: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: 'temurin'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+      - name: Lint
+        run: ./gradlew ktlintCheck detekt
+      - name: Tests
+        run: ./gradlew test -x ktlintMainSourceSetCheck -x detekt
+      - name: Build
+        run: ./gradlew build -x test -x ktlintMainSourceSetCheck -x detekt
+      - name: Test Report
+        uses: dorny/test-reporter@v2
+        if: ${{ !cancelled() }}
+        with:
+          name: Test Results
+          path: build/test-results/test/*.xml
+          reporter: java-junit
