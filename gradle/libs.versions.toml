@@ -6,6 +6,7 @@ spring-modulith = "1.4.1"
 springdoc-openapi = "2.8.11"
 ktlint = "13.1.0"
 detekt = "1.23.8"
+kotlin-logging = "7.0.13"
 
 [libraries]
 # Spring Boot starters
@@ -34,6 +35,7 @@ flyway-core = { group = "org.flywaydb", name = "flyway-core" }
 flyway-database-postgresql = { group = "org.flywaydb", name = "flyway-database-postgresql" }
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect" }
 postgresql = { group = "org.postgresql", name = "postgresql" }
+kotlin-logging = { group = "io.github.oshai", name = "kotlin-logging-jvm", version.ref = "kotlin-logging" }
 
 # Test libraries
 spring-boot-starter-test = { group = "org.springframework.boot", name = "spring-boot-starter-test" }
@@ -60,7 +62,8 @@ observability = [
     "micrometer-tracing-bridge-brave",
     "micrometer-registry-prometheus",
     "spring-modulith-actuator",
-    "spring-modulith-observability"
+    "spring-modulith-observability",
+    "kotlin-logging"
 ]
 
 flyway = [
