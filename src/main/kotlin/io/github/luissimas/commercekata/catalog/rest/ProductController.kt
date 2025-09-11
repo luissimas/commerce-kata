@@ -1,6 +1,7 @@
 package io.github.luissimas.commercekata.catalog.rest
 
 import io.github.luissimas.commercekata.catalog.domain.Product
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
@@ -27,6 +28,8 @@ import org.springframework.web.bind.annotation.RestController
 class ProductController(
     val repository: JdbcAggregateTemplate,
 ) {
+    private val logger = KotlinLogging.logger {}
+
     @Operation(
         summary = "List products",
         description = "Retrieve a paginated list of all products in the catalog",
@@ -62,5 +65,15 @@ class ProductController(
     @ResponseStatus(HttpStatus.CREATED)
     fun createProduct(
         @RequestBody @Valid request: CreateProductRequestDTO,
-    ): ProductDTO = repository.insert(request.toDomain()).let(ProductDTO::fromDomain)
+    ): ProductDTO =
+        repository.insert(request.toDomain()).let(ProductDTO::fromDomain).also {
+            logger.atInfo {
+                message = "Product created"
+                payload =
+                    buildMap {
+                        put("productId", it.id)
+                        put("productName", it.name)
+                    }
+            }
+        }
 }
