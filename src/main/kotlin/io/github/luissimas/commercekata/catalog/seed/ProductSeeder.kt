@@ -6,6 +6,7 @@ import io.github.luissimas.commercekata.catalog.domain.Product
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Profile
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate
+import org.springframework.data.jdbc.core.count
 import org.springframework.stereotype.Component
 import java.math.BigDecimal
 import java.util.UUID
@@ -16,6 +17,9 @@ class ProductSeeder(
     val jdbcAggregateTemplate: JdbcAggregateTemplate,
 ) : CommandLineRunner {
     override fun run(vararg args: String?) {
+        val count = jdbcAggregateTemplate.count<Product>()
+        if (count > 0) return
+
         val products =
             listOf(
                 Product(
